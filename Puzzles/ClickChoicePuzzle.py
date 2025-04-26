@@ -1,5 +1,5 @@
 import pygame
-from KBinterrupt.settings import *
+from settings import *
 
 class ClickChoicePuzzle:
     def __init__(self, screen, question, answers, correct_answer):
