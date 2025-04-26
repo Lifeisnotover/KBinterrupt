@@ -135,7 +135,7 @@ def main():
             screen.fill(BLACK)
             current_room.draw(screen, player.rect)
             player.draw(screen)
-            draw_game_info(screen, current_room, player)
+            draw_game_info(screen, current_room, player, images)
 
         pygame.display.flip()
         clock.tick(60)

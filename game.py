@@ -30,12 +30,24 @@ def show_game_over(screen):
     return True
 
 
-def draw_game_info(screen, current_room, player):
+def draw_game_info(screen, current_room, player, images):
     font = pygame.font.SysFont(None, 30)
-    info = [
-        f"Комната: {current_room.name}",
-        f"Здоровье: {'♥' * int(player.health)}",
-    ]
-    for i, text in enumerate(info):
-        text_surface = font.render(text, True, WHITE)
-        screen.blit(text_surface, (10, 10 + i * 30))
+
+    # Отображение названия комнаты
+    room_text = font.render(f"Комната: {current_room.name}", True, WHITE)
+    screen.blit(room_text, (TEXT_OFFSET, TEXT_OFFSET))
+
+    # Позиция для первого сердца
+    heart_x = TEXT_OFFSET
+    heart_y = TEXT_OFFSET + room_text.get_height() + 10
+
+    # Получаем изображения сердец из словаря
+    heart_img = images['heart'][0]  # Полное сердце (первый элемент списка)
+    empty_heart_img = images['empty_heart'][0]  # Пустое сердце
+
+    # Отображаем сердца - сначала полные, затем пустые
+    for i in range(player.max_health):
+        if i < player.health:
+            screen.blit(heart_img, (heart_x + i * (HEART_SIZE + HEART_SPACING), heart_y))
+        else:
+            screen.blit(empty_heart_img, (heart_x + i * (HEART_SIZE + HEART_SPACING), heart_y))

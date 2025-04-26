@@ -20,6 +20,10 @@ PROJECTILE_SIZE = HEIGHT // 20
 PROJECTILE_SPEED = HEIGHT // 100
 SHOOT_DELAY = 1000
 
+HEART_SIZE = 30
+HEART_SPACING = 5
+TEXT_OFFSET = 10
+
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -45,6 +49,11 @@ def load_images():
         projectile_image_1 = pygame.image.load('Images/one.png')
         projectile_image_2 = pygame.image.load('Images/zero.png')
 
+        heart_image = pygame.image.load('Images/heart.png')
+        empty_heart_image = pygame.image.load('Images/empty_heart.png')
+
+        heart_images = [pygame.transform.scale(heart_image, (HEART_SIZE, HEART_SIZE))]
+        empty_heart_images = [pygame.transform.scale(empty_heart_image, (HEART_SIZE, HEART_SIZE))]
 
         idle_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in idle_images]
         right_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in right_images]
@@ -66,6 +75,8 @@ def load_images():
             'wall': wall_image,
             'mob': mob_image,
             'idle_right': idle_images,
+            'heart': heart_images,
+            'empty_heart': empty_heart_images,
             'projectiles': {
                 '0': projectile_image_1,
                 '1': projectile_image_2
