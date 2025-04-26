@@ -1,6 +1,6 @@
 import random
 
-from KBinterrupt.settings import *
+from settings import *
 
 
 class Player:

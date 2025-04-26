@@ -1,4 +1,5 @@
 import pygame
+from settings import *
 
 class DraggableBlock:
     def __init__(self, x, y, text):
