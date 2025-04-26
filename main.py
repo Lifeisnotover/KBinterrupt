@@ -83,7 +83,6 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
                 elif event.key == pygame.K_e and current_puzzle is None:
-                    # Обработка перехода на новый уровень
                     if current_room.stairs and current_room.stairs_rect and player.rect.colliderect(
                             current_room.stairs_rect):
                         images2 = load_images2()
@@ -93,20 +92,21 @@ def main():
                             player.health = MAX_HEALTH
                             current_room = rooms[0]
                             player.rect.center = current_room.rect.center
-                            current_level = 2  # Устанавливаем текущий уровень
+                            current_level = 2
+                            for room in rooms:
+                                if room.name == "Главный зал" and room.boss:
+                                    room.boss = True  # Устанавливаем флаг для комнаты с боссом
+                                    break
                             continue
-
-                    # Общая логика перехода между комнатами (работает для обоих уровней)
                     for door in current_room.doors:
                         if player.rect.colliderect(door['rect']):
-                            # Для второго уровня упрощаем условия перехода
                             if current_level == 1:
                                 if door['target'].name == "Главный зал" or getattr(door['target'], "puzzle_solved",
                                                                                    False):
                                     current_room = door['target']
                                     adjust_player_position(player, door)
                                     break
-                            else:  # Для второго уровня
+                            else:
                                 current_room = door['target']
                                 adjust_player_position(player, door)
                                 break
@@ -120,19 +120,20 @@ def main():
                                 available_puzzles.remove(selected_creator)
                                 break
 
-                    # Активация лестницы только на первом уровне
                     if current_level == 1 and all(room.player_entered for room in rooms if room.name != "Главный зал"):
                         for room in rooms:
                             if room.name == "Главный зал":
                                 room.stairs = True
+                    if current_level == 2 and all(room.player_entered for room in rooms if room.name != "Главный зал"):
+                        for room in rooms:
+                            if room.name == "Главный зал":
+                                room.boss = True
 
             if current_puzzle:
                 current_puzzle.handle_event(event)
 
-        # Остальной код остается без изменений
         if player.health <= 0:
             if show_game_over(screen):
-                # При рестарте возвращаемся на первый уровень
                 rooms = create_dungeon(images)
                 player = Player(WIDTH // 2, HEIGHT // 2, images)
                 current_room = rooms[0]

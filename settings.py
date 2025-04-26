@@ -51,6 +51,8 @@ def load_images2():
         projectile_image_2 = pygame.image.load('Images/zero.png')
         stares_image = pygame.image.load('Images/Staries.png')
         idle_images = [pygame.image.load('Images/idle_right_1.png'), pygame.image.load('Images/idle_right_2.png')]
+        boss = pygame.image.load('Images/Untitled 04-27-2025 02-22-04.png')
+        boss = pygame.transform.scale(boss, (300, 300))
         right_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in right_images]
         left_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in left_images]
         up_image = [pygame.transform.scale(up_image, (PLAYER_SIZE, PLAYER_SIZE))]
@@ -70,7 +72,8 @@ def load_images2():
                 '0': projectile_image_1,
                 '1': projectile_image_2
             },
-            'idle_right': idle_images
+            'idle_right': idle_images,
+            'boss': boss
         }
     except Exception as e:
         print(f"Ошибка загрузки изображений: {e}")

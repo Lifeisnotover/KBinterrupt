@@ -17,6 +17,7 @@ class Room:
         self.puzzle_solved = False
         self.stairs = False
         self.stairs_rect = None
+        self.boss = False
 
     def draw(self, surface, player_rect=None):
         current_has_player = player_rect and self.rect.colliderect(player_rect)
@@ -58,7 +59,9 @@ class Room:
                 surface.blit(mob_surface, (mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2))
             else:
                 surface.blit(self.images['mob'], (mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2))
-
+        if self.boss:
+            boss_surface = self.images['boss'].copy()
+            surface.blit(boss_surface, (self.rect.centerx, self.rect.centery))
         if self.stairs and 'stairs' in self.images:
             stairs_img = pygame.transform.scale(self.images['stairs'], (60, 60))
             stairs_rect = stairs_img.get_rect(center=self.rect.center)
