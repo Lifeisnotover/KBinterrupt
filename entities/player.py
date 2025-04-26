@@ -39,7 +39,7 @@ class Player:
                 self.rect = old_pos
                 break
 
-    def shoot(self,current_room):
+    def shoot(self):
         if self.shoot_cooldown <= 0:
             keys = pygame.key.get_pressed()
             dx, dy = 0, 1

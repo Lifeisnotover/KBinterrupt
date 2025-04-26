@@ -127,7 +127,7 @@ def main():
             player.move(dx, dy, [current_room])
 
             if keys[pygame.K_DOWN] or keys[pygame.K_UP] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]:
-                player.shoot(current_room)
+                player.shoot()
 
             player.update_projectiles(current_room)
             mob_system.update_mobs(current_room, player)
