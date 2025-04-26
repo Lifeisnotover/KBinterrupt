@@ -3,19 +3,20 @@ import random
 from settings import *
 
 class Player:
-    def __init__(self, x, y, image):
+    def __init__(self, x, y, image, projectile_images):
         self.rect = pygame.Rect(x, y, PLAYER_SIZE, PLAYER_SIZE)
         self.speed = PLAYER_SPEED
         self.health = 10
         self.projectiles = []
         self.shoot_cooldown = 0
         self.image = image
+        self.projectile_images = projectile_images  # Сохраняем изображения снарядов
 
     def draw(self, surface):
         surface.blit(self.image, self.rect.topleft)
         for proj in self.projectiles:
-            color = WHITE if proj['type'] == '1' else PURPLE
-            pygame.draw.circle(surface, color, (int(proj['x']), int(proj['y'])), PROJECTILE_SIZE)
+            image = self.projectile_images[proj['type']]  # Выбираем изображение снаряда
+            surface.blit(image, (int(proj['x'] - PROJECTILE_SIZE // 2), int(proj['y'] - PROJECTILE_SIZE // 2)))
 
     def move(self, dx, dy, rooms):
         self.rect.x += dx
@@ -39,12 +40,13 @@ class Player:
             if length > 0:
                 dx, dy = dx/length, dy/length
 
+            projectile_type = random.choice(['0', '1'])  # Рандомно выбираем тип снаряда
             self.projectiles.append({
                 'x': self.rect.centerx,
                 'y': self.rect.centery,
                 'dx': dx * 7,
                 'dy': dy * 7,
-                'type': random.choice(['0', '1'])
+                'type': projectile_type
             })
             self.shoot_cooldown = 15
 

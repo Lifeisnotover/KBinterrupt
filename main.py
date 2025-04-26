@@ -6,7 +6,6 @@ from entities.player import Player
 from entities.mob import Mob
 from game import show_game_over, draw_game_info
 
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -14,9 +13,14 @@ def main():
     clock = pygame.time.Clock()
 
     images = load_images()
+    if images is None:
+        return
 
     rooms = create_dungeon(images)
-    player = Player(WIDTH // 2, HEIGHT // 2, images['player'])
+    player = Player(WIDTH // 2, HEIGHT // 2, images['player'], {
+        '0': images['projectile_1'],
+        '1': images['projectile_2']
+    })
     current_room = rooms[0]
     mob_system = Mob()
 
@@ -45,7 +49,10 @@ def main():
         if player.health <= 0:
             if show_game_over(screen):
                 rooms = create_dungeon(images)
-                player = Player(WIDTH // 2, HEIGHT // 2, images['player'])
+                player = Player(WIDTH // 2, HEIGHT // 2, images['player'], {
+                    '0': images['projectile_1'],
+                    '1': images['projectile_2']
+                })
                 current_room = rooms[0]
             continue
 
@@ -73,7 +80,6 @@ def main():
 
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()
