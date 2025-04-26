@@ -1,4 +1,4 @@
-from KBinterrupt.settings import *
+from settings import *
 
 class Mob:
     def update_mobs(self, current_room, player):

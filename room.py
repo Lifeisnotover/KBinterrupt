@@ -2,7 +2,6 @@ import pygame
 import random
 from settings import *
 
-
 class Room:
     def __init__(self, x, y, w, h, name, images):
         self.rect = pygame.Rect(x, y, w, h)
@@ -13,7 +12,6 @@ class Room:
         self.images = images
 
     def draw(self, surface, player_rect=None):
-
         wall_rect = pygame.Rect(self.rect.x - 20, self.rect.y - 20, self.rect.w + 40, self.rect.h + 40)
         surface.blit(self.images['wall'], wall_rect.topleft)
 
@@ -28,20 +26,17 @@ class Room:
             pygame.draw.rect(surface, color, door['rect'], 2)
 
         for mob in self.mobs:
-            pygame.draw.circle(surface, BLUE, (mob['x'], mob['y']), MOB_SIZE)
+            surface.blit(self.images['mob'], (mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2))
 
     def add_door(self, direction, target_room):
         if direction == 'north':
             rect = pygame.Rect(self.rect.centerx - DOOR_SIZE // 2, self.rect.top - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
         elif direction == 'south':
-            rect = pygame.Rect(self.rect.centerx - DOOR_SIZE // 2, self.rect.bottom - DOOR_SIZE // 2, DOOR_SIZE,
-                               DOOR_SIZE)
+            rect = pygame.Rect(self.rect.centerx - DOOR_SIZE // 2, self.rect.bottom - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
         elif direction == 'west':
-            rect = pygame.Rect(self.rect.left - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE,
-                               DOOR_SIZE)
+            rect = pygame.Rect(self.rect.left - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
         elif direction == 'east':
-            rect = pygame.Rect(self.rect.right - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE,
-                               DOOR_SIZE)
+            rect = pygame.Rect(self.rect.right - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
 
         self.doors.append({'rect': rect, 'direction': direction, 'target': target_room})
 
@@ -59,7 +54,7 @@ def create_dungeon(images):
     room4 = Room(500, 200, 200, 200, "Библиотека", images)
     room5 = Room(300, 400, 200, 200, "Тайная комната", images)
 
-    rooms = [room1, room2, room3, room4, room5]  # <--- Вот этого не хватает
+    rooms = [room1, room2, room3, room4, room5]
 
     room1.add_door('west', room2)
     room1.add_door('north', room3)
