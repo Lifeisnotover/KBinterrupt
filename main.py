@@ -28,6 +28,9 @@ player_image = pygame.transform.scale(player_image, (PLAYER_SIZE, PLAYER_SIZE))
 room_background_image = pygame.image.load('room_background.png')
 room_background_image = pygame.transform.scale(room_background_image, (200, 200))
 
+wall_image = pygame.image.load('wall.jpg')
+wall_image = pygame.transform.scale(wall_image, (240, 240))
+
 class Room:
     def __init__(self, x, y, w, h, name):
         self.rect = pygame.Rect(x, y, w, h)
@@ -37,14 +40,24 @@ class Room:
         self.mobs = []
 
     def draw(self, surface, player_rect=None):
+        # Draw wall background
+        wall_rect = pygame.Rect(self.rect.x - 20, self.rect.y - 20, self.rect.w + 40, self.rect.h + 40)
+        surface.blit(wall_image, wall_rect.topleft)
+
+        # Draw room background
         surface.blit(room_background_image, self.rect.topleft)
-        pygame.draw.rect(surface, self.color, self.rect, 2)
+
+        # Draw room name
         font = pygame.font.SysFont(None, 24)
         text = font.render(self.name, True, WHITE)
         surface.blit(text, (self.rect.x + 10, self.rect.y + 10))
+
+        # Draw doors
         for door in self.doors:
             color = YELLOW if player_rect and player_rect.colliderect(door['rect']) else GREEN
             pygame.draw.rect(surface, color, door['rect'], 2)
+
+        # Draw mobs
         for mob in self.mobs:
             pygame.draw.circle(surface, BLUE, (mob['x'], mob['y']), MOB_SIZE)
 
