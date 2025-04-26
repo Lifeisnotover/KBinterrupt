@@ -1,8 +1,17 @@
+import pygame
+import random
 from settings import *
 
 class Mob:
     def update_mobs(self, current_room, player):
         for mob in current_room.mobs:
+            if 'delay' not in mob:
+                mob['delay'] = random.randint(30, 60)  # Задержка перед началом движения (в кадрах)
+
+            if mob['delay'] > 0:
+                mob['delay'] -= 1
+                continue
+
             dx = player.rect.centerx - mob['x']
             dy = player.rect.centery - mob['y']
             length = (dx**2 + dy**2)**0.5
