@@ -11,7 +11,7 @@ class Player:
         self.max_health = 10
         self.projectiles = []  # Снаряды
         self.shoot_cooldown = 0  # Таймер перезарядки
-        self.shoot_delay = 15  # Задержка между выстрелами (в кадрах)
+        self.shoot_delay = 45  # Задержка между выстрелами (в кадрах)
         self.images = images
         self.current_image = images['down'][0]
 
@@ -110,16 +110,10 @@ class Player:
                 self.projectiles.remove(proj)
 
     def draw(self, surface):
-        # Отрисовка игрока (с миганием при иммунитете)
         if not self.is_invincible or self.hit_flash_timer % 10 < 5:
             surface.blit(self.current_image, self.rect.topleft)
 
-        # Отрисовка снарядов
         for proj in self.projectiles:
-            color = WHITE if proj['type'] == '1' else PURPLE
-            pygame.draw.circle(
-                surface,
-                color,
-                (int(proj['x']), int(proj['y'])),
-                PROJECTILE_SIZE
-            )
+            projectile_image = self.images['projectiles'][proj['type']]
+            projectile_rect = projectile_image.get_rect(center=(proj['x'], proj['y']))
+            surface.blit(projectile_image, projectile_rect)
