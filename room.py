@@ -54,11 +54,11 @@ class Room:
             self.mobs.append({'x': x, 'y': y, 'health': 2})
 
 def create_dungeon(images):
-    room1 = Room(720, 360, 200, 200, "Главный зал", images)
-    room2 = Room(240, 360, 200, 200, "Кладовая", images)
-    room3 = Room(720, 0, 200, 200, "Арсенал", images)
-    room4 = Room(1200, 360, 200, 200, "Библиотека", images)
-    room5 = Room(720, 720, 200, 200, "Тайная комната", images)
+    room1 = Room(300, 200, 200, 200, "Главный зал", images)
+    room2 = Room(100, 200, 200, 200, "Кладовая", images)
+    room3 = Room(300, 0, 200, 200, "Арсенал", images)
+    room4 = Room(500, 200, 200, 200, "Библиотека", images)
+    room5 = Room(300, 400, 200, 200, "Тайная комната", images)
 
     rooms = [room1, room2, room3, room4, room5]
 

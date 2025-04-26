@@ -64,7 +64,7 @@ def main():
         return
 
     rooms = create_dungeon(images)
-    player = Player(WIDTH // 2 - 100, HEIGHT // 2 - 100, images)
+    player = Player(WIDTH // 2, HEIGHT // 2, images)
     current_room = rooms[0]  # Главный зал
     mob_system = Mob()
     current_puzzle = None
