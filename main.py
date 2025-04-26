@@ -8,6 +8,51 @@ from game import show_game_over, draw_game_info
 from room import create_dungeon
 from settings import load_images, WIDTH, HEIGHT, BLACK
 
+
+def adjust_player_position(player, door):
+    """Корректирует позицию игрока при переходе через дверь"""
+    if door['direction'] == 'north':
+        player.rect.bottom = door['target'].rect.bottom - 10
+    elif door['direction'] == 'south':
+        player.rect.top = door['target'].rect.top + 10
+    elif door['direction'] == 'west':
+        player.rect.right = door['target'].rect.right - 10
+    elif door['direction'] == 'east':
+        player.rect.left = door['target'].rect.left + 10
+
+
+def create_puzzle_for_room(screen, room_name):
+    """Создает соответствующую загадку для комнаты"""
+    if room_name == "Кладовая":
+        return ClickChoicePuzzle(
+            screen,
+            "Что выведет этот код?\n\nint main() {\n  int x = 5;\n  int y = x++ + ++x;\n  cout << y;\n  return 0;\n}",
+            ["10", "11", "12", "13"],
+            "12"
+        )
+    elif room_name == "Арсенал":
+        return ClickChoicePuzzle(
+            screen,
+            "Какая сложность у быстрой сортировки\nв среднем случае?",
+            ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
+            "O(n log n)"
+        )
+    elif room_name == "Библиотека":
+        return ClickChoicePuzzle(
+            screen,
+            "Какой алгоритм использует Dijkstra\nдля нахождения кратчайшего пути?",
+            ["Жадный", "Разделяй и властвуй", "Динамическое программирование", "Полный перебор"],
+            "Жадный"
+        )
+    elif room_name == "Тайная комната":
+        return ClickChoicePuzzle(
+            screen,
+            "Что делает оператор '>>>' в Java?",
+            ["Логическое И", "Беззнаковый сдвиг вправо", "Знаковый сдвиг вправо", "Логическое ИЛИ"],
+            "Беззнаковый сдвиг вправо"
+        )
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -21,10 +66,9 @@ def main():
 
     rooms = create_dungeon(images)
     player = Player(WIDTH // 2, HEIGHT // 2, images)
-    current_room = rooms[0]
+    current_room = rooms[0]  # Главный зал
     mob_system = Mob()
     current_puzzle = None
-    completed_rooms = []
 
     running = True
     while running:
@@ -37,18 +81,18 @@ def main():
                 elif event.key == pygame.K_e and current_puzzle is None:
                     for door in current_room.doors:
                         if player.rect.colliderect(door['rect']):
-                            if len(current_room.mobs) == 0 and current_room not in completed_rooms:
-                                current_puzzle = random.choice([ClickChoicePuzzle(screen)])
-                            else:
+                            # Если это главный зал или комната с решенной загадкой - просто переходим
+                            if door['target'].name == "Главный зал" or door['target'].puzzle_solved:
                                 current_room = door['target']
-                                if door['direction'] == 'north':
-                                    player.rect.bottom = current_room.rect.bottom - 10
-                                elif door['direction'] == 'south':
-                                    player.rect.top = current_room.rect.top + 10
-                                elif door['direction'] == 'west':
-                                    player.rect.right = current_room.rect.right - 10
-                                elif door['direction'] == 'east':
-                                    player.rect.left = current_room.rect.left + 10
+                                adjust_player_position(player, door)
+                                break
+
+                            # Если есть мобы - не пускаем
+                            if len(current_room.mobs) > 0:
+                                break
+
+                            # Если это первый вход - показываем загадку
+                            current_puzzle = create_puzzle_for_room(screen, door['target'].name)
                             break
 
             if current_puzzle:
@@ -59,7 +103,6 @@ def main():
                 rooms = create_dungeon(images)
                 player = Player(WIDTH // 2, HEIGHT // 2, images)
                 current_room = rooms[0]
-                completed_rooms = []
             continue
 
         if current_puzzle:
@@ -67,21 +110,14 @@ def main():
             current_puzzle.draw()
 
             if current_puzzle.is_completed():
-                completed_rooms.append(current_room)
-                current_puzzle = None
-
+                # Находим дверь, через которую пытались войти
                 for door in current_room.doors:
                     if player.rect.colliderect(door['rect']):
+                        door['target'].puzzle_solved = True
                         current_room = door['target']
-                        if door['direction'] == 'north':
-                            player.rect.bottom = current_room.rect.bottom - 10
-                        elif door['direction'] == 'south':
-                            player.rect.top = current_room.rect.top + 10
-                        elif door['direction'] == 'west':
-                            player.rect.right = current_room.rect.right - 10
-                        elif door['direction'] == 'east':
-                            player.rect.left = current_room.rect.left + 10
+                        adjust_player_position(player, door)
                         break
+                current_puzzle = None
         else:
             keys = pygame.key.get_pressed()
             dx, dy = 0, 0
@@ -107,6 +143,7 @@ def main():
 
     pygame.quit()
     sys.exit()
+
 
 if __name__ == "__main__":
     main()

@@ -1,15 +1,15 @@
+import pygame
 from settings import *
 
-
 class ClickChoicePuzzle:
-    def __init__(self, screen):
+    def __init__(self, screen, question, answers, correct_answer):
         self.screen = screen
         self.font = pygame.font.SysFont('Arial', FONT_SIZE)
         self.buttons = []
         self.completed = False
-        self.task_text = "Что выведет этот код?\n\nint main() {\n  int x = 5;\n  int y = x++ + ++x;\n  cout << y;\n  return 0;\n}"
-        self.answers = ["10", "11", "12", "13"]
-        self.correct_answer = "12"
+        self.task_text = question
+        self.answers = answers
+        self.correct_answer = correct_answer
 
         button_width = 200
         button_height = 50
