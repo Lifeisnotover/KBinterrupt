@@ -1,14 +1,12 @@
 import pygame
 
-# Game settings
 WIDTH, HEIGHT = 800, 600
 PLAYER_SPEED = 5
 PLAYER_SIZE = 35
 MOB_SIZE = 30
-PROJECTILE_SIZE = 30  # Увеличиваем размер снаряда для лучшего отображения изображения
+PROJECTILE_SIZE = 30
 DOOR_SIZE = 20
 
-# Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -19,14 +17,21 @@ PURPLE = (255, 0, 255)
 
 def load_images():
     try:
-        player_image = pygame.image.load('Images/character.png')
+        right_images = [pygame.image.load('Images/right_right.png'), pygame.image.load('Images/right_left.png')]
+        left_images = [pygame.image.load('Images/left_right.png'), pygame.image.load('Images/left_left.png')]
+        up_image = pygame.image.load('Images/up.png')
+        down_images = [pygame.image.load('Images/down.png')]
+
         room_background_image = pygame.image.load('Images/room_background.png')
         wall_image = pygame.image.load('Images/wall.jpg')
-        mob_image = pygame.image.load('Images/mob.png')  # Укажите путь к вашему изображению моба
-        projectile_image_1 = pygame.image.load('Images/one.png')  # Укажите путь к первому изображению снаряда
-        projectile_image_2 = pygame.image.load('Images/zero.png')  # Укажите путь к второму изображению снаряда
+        mob_image = pygame.image.load('Images/mob.png')
+        projectile_image_1 = pygame.image.load('Images/one.png')
+        projectile_image_2 = pygame.image.load('Images/zero.png')
 
-        player_image = pygame.transform.scale(player_image, (PLAYER_SIZE, PLAYER_SIZE))
+        right_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in right_images]
+        left_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in left_images]
+        up_image = pygame.transform.scale(up_image, (PLAYER_SIZE, PLAYER_SIZE))
+        down_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in down_images]
         room_background_image = pygame.transform.scale(room_background_image, (200, 200))
         wall_image = pygame.transform.scale(wall_image, (240, 240))
         mob_image = pygame.transform.scale(mob_image, (MOB_SIZE, MOB_SIZE))
@@ -34,12 +39,17 @@ def load_images():
         projectile_image_2 = pygame.transform.scale(projectile_image_2, (PROJECTILE_SIZE, PROJECTILE_SIZE))
 
         return {
-            'player': player_image,
+            'right': right_images,
+            'left': left_images,
+            'up': up_image,
+            'down': down_images,
             'room_bg': room_background_image,
             'wall': wall_image,
             'mob': mob_image,
-            'projectile_1': projectile_image_1,
-            'projectile_2': projectile_image_2
+            'projectiles': {
+                '0': projectile_image_1,
+                '1': projectile_image_2
+            }
         }
     except Exception as e:
         print(f"Ошибка загрузки изображений: {e}")

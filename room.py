@@ -45,10 +45,10 @@ class Room:
             side = random.choice(['top', 'bottom'])
             if side == 'top':
                 x = random.randint(self.rect.left + MOB_SIZE, self.rect.right - MOB_SIZE)
-                y = self.rect.top + MOB_SIZE  # Спавним на верхней границе пола
+                y = self.rect.top + MOB_SIZE
             elif side == 'bottom':
                 x = random.randint(self.rect.left + MOB_SIZE, self.rect.right - MOB_SIZE)
-                y = self.rect.bottom - MOB_SIZE  # Спавним на нижней границе пола
+                y = self.rect.bottom - MOB_SIZE
             self.mobs.append({'x': x, 'y': y, 'health': 2})
 
 def create_dungeon(images):

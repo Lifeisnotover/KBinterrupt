@@ -17,10 +17,7 @@ def main():
         return
 
     rooms = create_dungeon(images)
-    player = Player(WIDTH // 2, HEIGHT // 2, images['player'], {
-        '0': images['projectile_1'],
-        '1': images['projectile_2']
-    })
+    player = Player(WIDTH // 2, HEIGHT // 2, images)
     current_room = rooms[0]
     mob_system = Mob()
 
@@ -49,10 +46,7 @@ def main():
         if player.health <= 0:
             if show_game_over(screen):
                 rooms = create_dungeon(images)
-                player = Player(WIDTH // 2, HEIGHT // 2, images['player'], {
-                    '0': images['projectile_1'],
-                    '1': images['projectile_2']
-                })
+                player = Player(WIDTH // 2, HEIGHT // 2, images)
                 current_room = rooms[0]
             continue
 

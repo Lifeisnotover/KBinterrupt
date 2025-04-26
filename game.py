@@ -27,7 +27,7 @@ def show_game_over(screen):
                     pygame.quit()
                     sys.exit()
 
-    return True  # Indicates game should restart
+    return True
 
 
 def draw_game_info(screen, current_room, player):

@@ -6,8 +6,7 @@ class Mob:
     def update_mobs(self, current_room, player):
         for mob in current_room.mobs:
             if 'delay' not in mob:
-                mob['delay'] = random.randint(30, 60)  # Задержка перед началом движения (в кадрах)
-
+                mob['delay'] = random.randint(30, 60)
             if mob['delay'] > 0:
                 mob['delay'] -= 1
                 continue
