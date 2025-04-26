@@ -1,9 +1,21 @@
 import pygame
-
-# Размеры окна
 WIDTH, HEIGHT = 800, 600
+PLAYER_SPEED = 2
+PLAYER_SIZE = 40
+MOB_SIZE = 30
+PROJECTILE_SIZE = 8
+DOOR_SIZE = 20
+MOB_SPEED = 1.0  # Скорость движения мобов
+INVINCIBILITY_DURATION = 60  # Длительность иммунитета в кадрах (60 = 1 сек при 60 FPS)
+MOB_DAMAGE = 1
+FONT_SIZE = 32
 
-# Цвета
+# Настройки стрельбы
+PROJECTILE_SIZE = 8
+PROJECTILE_SPEED = 7
+SHOOT_DELAY = 15
+
+# Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -14,27 +26,6 @@ PURPLE = (255, 0, 255)
 LIGHT_BLUE = (173, 216, 230)
 LIGHT_GREEN = (144, 238, 144)
 
-# Настройки игрока
-PLAYER_SPEED = 2
-PLAYER_SIZE = 40
-
-# Настройки мобов
-MOB_SIZE = 30
-MOB_SPEED = 1.0  # Скорость движения мобов
-MOB_DAMAGE = 1
-
-# Настройки снарядов
-PROJECTILE_SIZE = 8
-PROJECTILE_SPEED = 7
-SHOOT_DELAY = 15
-
-# Настройки дверей
-DOOR_SIZE = 20
-
-# Настройки шрифтов
-FONT_SIZE = 32
-
-# Функция для загрузки изображений
 def load_images():
     try:
         right_images = [pygame.image.load('Images/right_right.png'), pygame.image.load('Images/right_left.png')]
