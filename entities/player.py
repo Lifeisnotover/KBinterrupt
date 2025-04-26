@@ -1,4 +1,5 @@
 import random
+
 from KBinterrupt.settings import *
 
 
@@ -26,13 +27,19 @@ class Player:
         old_pos = self.rect.copy()
         self.rect.x += dx * self.speed
         self.rect.y += dy * self.speed
+        if dx > 0:
+            self.current_image = self.images['right'][0]
+        elif dx < 0:
+            self.current_image = self.images['left'][0]
+        elif dy > 0:
+            self.current_image = self.images['down'][0]
 
         for room in rooms:
             if not room.rect.contains(self.rect):
                 self.rect = old_pos
                 break
 
-    def shoot(self, current_room=None):
+    def shoot(self):
         if self.shoot_cooldown <= 0:
             keys = pygame.key.get_pressed()
             dx, dy = 0, 1
