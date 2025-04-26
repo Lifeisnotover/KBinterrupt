@@ -1,6 +1,5 @@
-import pygame
 import random
-from settings import *
+from KBinterrupt.settings import *
 
 
 class Player:

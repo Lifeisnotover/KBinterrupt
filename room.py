@@ -1,5 +1,5 @@
-import pygame
 import random
+
 from settings import *
 
 
@@ -25,10 +25,25 @@ class Room:
 
         self.has_player = current_has_player
 
-        wall_rect = pygame.Rect(self.rect.x - 20, self.rect.y - 20, self.rect.w + 40, self.rect.h + 40)
-        surface.blit(self.images['wall'], wall_rect.topleft)
-        surface.blit(self.images['room_bg'], self.rect.topleft)
+        room_bg_scaled = pygame.transform.scale(self.images['room_bg'], (self.rect.width, self.rect.height))
+        surface.blit(room_bg_scaled, self.rect.topleft)
 
+        wall_thickness = 20
+
+        wall_top = pygame.transform.scale(self.images['wall'], (self.rect.width, wall_thickness))
+        surface.blit(wall_top, (self.rect.x, self.rect.y - wall_thickness))
+
+        wall_bottom = pygame.transform.scale(self.images['wall'], (self.rect.width, wall_thickness))
+        surface.blit(wall_bottom, (self.rect.x, self.rect.bottom))
+
+        wall_left = pygame.transform.scale(self.images['wall'], (wall_thickness, self.rect.height))
+        surface.blit(wall_left, (self.rect.x - wall_thickness, self.rect.y))
+
+        # Правая стена
+        wall_right = pygame.transform.scale(self.images['wall'], (wall_thickness, self.rect.height))
+        surface.blit(wall_right, (self.rect.right, self.rect.y))
+
+        # 3. Нарисовать название комнаты
         font = pygame.font.SysFont(None, 24)
         text = font.render(self.name, True, WHITE)
         surface.blit(text, (self.rect.x + 10, self.rect.y + 10))
@@ -58,31 +73,37 @@ class Room:
         if direction == 'north':
             rect = pygame.Rect(self.rect.centerx - DOOR_SIZE // 2, self.rect.top - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
         elif direction == 'south':
-            rect = pygame.Rect(self.rect.centerx - DOOR_SIZE // 2, self.rect.bottom - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
+            rect = pygame.Rect(self.rect.centerx - DOOR_SIZE // 2, self.rect.bottom - DOOR_SIZE // 2, DOOR_SIZE,
+                               DOOR_SIZE)
         elif direction == 'west':
-            rect = pygame.Rect(self.rect.left - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
+            rect = pygame.Rect(self.rect.left - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE,
+                               DOOR_SIZE)
         elif direction == 'east':
-            rect = pygame.Rect(self.rect.right - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE, DOOR_SIZE)
+            rect = pygame.Rect(self.rect.right - DOOR_SIZE // 2, self.rect.centery - DOOR_SIZE // 2, DOOR_SIZE,
+                               DOOR_SIZE)
 
         self.doors.append({'rect': rect, 'direction': direction, 'target': target_room})
 
     def spawn_mobs(self, count):
         for _ in range(count):
-            side = random.choice(['top', 'bottom'])
-            if side == 'top':
-                x = random.randint(self.rect.left + MOB_SIZE, self.rect.right - MOB_SIZE)
-                y = self.rect.top + MOB_SIZE
-            elif side == 'bottom':
-                x = random.randint(self.rect.left + MOB_SIZE, self.rect.right - MOB_SIZE)
-                y = self.rect.bottom - MOB_SIZE
+            x = random.randint(self.rect.left + MOB_SIZE, self.rect.right - MOB_SIZE)
+            y = random.randint(self.rect.top + MOB_SIZE, self.rect.bottom - MOB_SIZE)
             self.mobs.append({'x': x, 'y': y, 'health': 2})
 
+
 def create_dungeon(images):
-    room1 = Room(300, 200, 200, 200, "Главный зал", images)
-    room2 = Room(100, 200, 200, 200, "Кладовая", images)
-    room3 = Room(300, 0, 200, 200, "Арсенал", images)
-    room4 = Room(500, 200, 200, 200, "Библиотека", images)
-    room5 = Room(300, 400, 200, 200, "Тайная комната", images)
+    room_width = WIDTH // 5
+    room_height = HEIGHT // 4
+    gap = WIDTH // 20
+
+    center_x = WIDTH // 2 - room_width // 2
+    center_y = HEIGHT // 2 - room_height // 2
+
+    room1 = Room(center_x, center_y, room_width, room_height, "Главный зал", images)
+    room2 = Room(center_x - room_width - gap, center_y, room_width, room_height, "Кладовая", images)
+    room3 = Room(center_x, center_y - room_height - gap, room_width, room_height, "Арсенал", images)
+    room4 = Room(center_x + room_width + gap, center_y, room_width, room_height, "Библиотека", images)
+    room5 = Room(center_x, center_y + room_height + gap, room_width, room_height, "Тайная комната", images)
 
     rooms = [room1, room2, room3, room4, room5]
 

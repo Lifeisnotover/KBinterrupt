@@ -1,7 +1,7 @@
 import pygame
 import random
 import sys
-from settings import *
+from KBinterrupt.settings import *
 from Puzzles.ClickChoicePuzzle import ClickChoicePuzzle
 from entities.mob import Mob
 from entities.player import Player
