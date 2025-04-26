@@ -7,7 +7,7 @@ from entities.mob import Mob
 from entities.player import Player
 from game import show_game_over, draw_game_info
 from room import create_dungeon
-from main_menu import show_main_menu  # Импортируем функцию для отображения главного меню
+from main_menu import show_main_menu
 
 available_puzzles = [
     lambda screen: ClickChoicePuzzle(
@@ -58,12 +58,12 @@ def main():
         print("Не удалось загрузить изображения!")
         return
 
-    if not show_main_menu(screen):  # Показываем главное меню
+    if not show_main_menu(screen):
         return
 
     rooms = create_dungeon(images)
     player = Player(WIDTH // 2, HEIGHT // 2, images)
-    current_room = rooms[0]  # Главный зал
+    current_room = rooms[0]
     mob_system = Mob()
     current_puzzle = None
 
@@ -108,7 +108,6 @@ def main():
             current_puzzle.draw()
 
             if current_puzzle.is_completed():
-                # Находим дверь, через которую пытались войти
                 for door in current_room.doors:
                     if player.rect.colliderect(door['rect']):
                         door['target'].puzzle_solved = True

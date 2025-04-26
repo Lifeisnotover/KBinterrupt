@@ -4,17 +4,17 @@ PLAYER_SPEED = 2
 PLAYER_SIZE = 40
 MOB_SIZE = 30
 DOOR_SIZE = 20
-MOB_SPEED = 1.0  # Скорость движения мобов
-INVINCIBILITY_DURATION = 60  # Длительность иммунитета в кадрах (60 = 1 сек при 60 FPS)
+MOB_SPEED = 1.0
+INVINCIBILITY_DURATION = 60
 MOB_DAMAGE = 1
 FONT_SIZE = 32
 
-# Настройки стрельбы
+
 PROJECTILE_SIZE = 30
 PROJECTILE_SPEED = 3
 SHOOT_DELAY = 1000
 
-# Colors
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
