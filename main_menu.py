@@ -8,11 +8,11 @@ def show_main_menu(screen):
     background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
     # Загрузка шрифтов
-    font_title = pygame.font.SysFont('Arial', 48, bold=True)
+    font_title = pygame.font.Font('Fonts/alagard-12px-unicode.otf', 48)
     font_option = pygame.font.SysFont('Arial', 32, bold=True)
 
     # Создание текста
-    title_text = font_title.render("Рогалик с головоломками", True, WHITE)
+    title_text = font_title.render("KBInterrupt", True, WHITE)
     start_text = font_option.render("Начать игру", True, WHITE)
     quit_text = font_option.render("Выйти", True, WHITE)
 
