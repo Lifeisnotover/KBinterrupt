@@ -15,6 +15,8 @@ class Room:
         self.has_player = False
         self.player_entered = False
         self.puzzle_solved = False
+        self.stairs = False
+        self.stairs_rect = None
 
     def draw(self, surface, player_rect=None):
         current_has_player = player_rect and self.rect.colliderect(player_rect)
@@ -29,7 +31,6 @@ class Room:
         surface.blit(room_bg_scaled, self.rect.topleft)
 
         wall_thickness = 20
-
         wall_top = pygame.transform.scale(self.images['wall'], (self.rect.width, wall_thickness))
         surface.blit(wall_top, (self.rect.x, self.rect.y - wall_thickness))
 
@@ -39,11 +40,9 @@ class Room:
         wall_left = pygame.transform.scale(self.images['wall'], (wall_thickness, self.rect.height))
         surface.blit(wall_left, (self.rect.x - wall_thickness, self.rect.y))
 
-        # Правая стена
         wall_right = pygame.transform.scale(self.images['wall'], (wall_thickness, self.rect.height))
         surface.blit(wall_right, (self.rect.right, self.rect.y))
 
-        # 3. Нарисовать название комнаты
         font = pygame.font.SysFont(None, 24)
         text = font.render(self.name, True, WHITE)
         surface.blit(text, (self.rect.x + 10, self.rect.y + 10))
@@ -59,6 +58,14 @@ class Room:
                 surface.blit(mob_surface, (mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2))
             else:
                 surface.blit(self.images['mob'], (mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2))
+
+        if self.stairs and 'stairs' in self.images:
+            stairs_img = pygame.transform.scale(self.images['stairs'], (60, 60))
+            stairs_rect = stairs_img.get_rect(center=self.rect.center)
+            surface.blit(stairs_img, stairs_rect)
+
+            if self.stairs_rect is None:
+                self.stairs_rect = stairs_rect
 
     def update(self):
         if self.safe_period > 0:
@@ -99,25 +106,50 @@ def create_dungeon(images):
     center_x = WIDTH // 2 - room_width // 2
     center_y = HEIGHT // 2 - room_height // 2
 
-    room1 = Room(center_x, center_y, room_width, room_height, "Главный зал", images)
-    room2 = Room(center_x - room_width - gap, center_y, room_width, room_height, "Кладовая", images)
-    room3 = Room(center_x, center_y - room_height - gap, room_width, room_height, "Арсенал", images)
-    room4 = Room(center_x + room_width + gap, center_y, room_width, room_height, "Библиотека", images)
-    room5 = Room(center_x, center_y + room_height + gap, room_width, room_height, "Тайная комната", images)
+    room1 = Room(center_x, center_y, room_width + 150, room_height, "Главный зал", images)
+    room2 = Room(center_x - room_width - gap, center_y, room_width, room_height + 150, "Кладовая", images)
+    room3 = Room(center_x + room_width + gap, center_y, room_width, room_height + 100, "Лаборатория", images)
+    room4 = Room(center_x, center_y - room_height - gap, room_width, room_height, "Оружейная", images)
+    room5 = Room(center_x, center_y + room_height + gap, room_width, room_height, "Архив", images)
+
+    # Соединяем двери
+    room1.add_door('west', room2)
+    room2.add_door('east', room1)
+
+    room1.add_door('east', room3)
+    room3.add_door('west', room1)
+
+    room1.add_door('north', room4)
+    room4.add_door('south', room1)
+
+    room1.add_door('south', room5)
+    room5.add_door('north', room1)
 
     rooms = [room1, room2, room3, room4, room5]
 
-    room1.add_door('west', room2)
-    room1.add_door('north', room3)
-    room1.add_door('east', room4)
-    room1.add_door('south', room5)
-
-    room2.add_door('east', room1)
-    room3.add_door('south', room1)
-    room4.add_door('west', room1)
-    room5.add_door('north', room1)
-
     for room in rooms:
-        room.spawn_mobs(3)
+        room.spawn_mobs(random.randint(2, 4))
+
+    return rooms
+
+
+def create_dungeon2(images):
+    room_width = WIDTH // 5
+    room_height = HEIGHT // 4
+    gap = WIDTH // 20
+
+    center_x = WIDTH // 2 - room_width // 2
+    center_y = HEIGHT // 2 - room_height // 2
+
+    room1 = Room(center_x, center_y, room_width + 150, room_height, "Главный зал", images)
+    room2 = Room(center_x - room_width - gap, center_y, room_width, room_height + 150, "Кладовая", images)
+    room3 = Room(center_x - room_width, center_y, room_width, room_height + 100, "Лаборатория", images)
+    room1.add_door('west', room2)
+    room2.add_door('east', room1)
+    room2.add_door('north', room3)
+    room3.add_door('south', room2)
+    rooms = [room1, room2, room3]
+    for room in rooms:
+        room.spawn_mobs(random.randint(2, 4))
 
     return rooms

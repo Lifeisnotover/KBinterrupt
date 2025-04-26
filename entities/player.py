@@ -7,11 +7,11 @@ class Player:
     def __init__(self, x, y, images):
         self.rect = pygame.Rect(x, y, PLAYER_SIZE, PLAYER_SIZE)
         self.speed = PLAYER_SPEED
-        self.health = 10
+        self.health = MAX_HEALTH
         self.max_health = 10
         self.projectiles = []
         self.shoot_cooldown = 0
-        self.shoot_delay = 45
+        self.shoot_delay = 15
         self.images = images
         self.current_image = images['down'][0]
         self.animation_frame = 0
@@ -35,8 +35,6 @@ class Player:
             self.last_direction = 'right'
         elif dx < 0:
             self.last_direction = 'left'
-        elif dy < 0:
-            self.last_direction = 'up'
         elif dy > 0:
             self.last_direction = 'down'
 
@@ -91,6 +89,7 @@ class Player:
             self.activate_invincibility()
 
     def activate_invincibility(self):
+        """Активирует период неуязвимости"""
         self.is_invincible = True
         self.invincibility_timer = self.invincibility_duration
         self.hit_flash_timer = self.invincibility_duration
