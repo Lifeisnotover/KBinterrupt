@@ -129,7 +129,7 @@ def main():
             if keys[pygame.K_d]: dx = player.speed
             player.move(dx, dy, [current_room])
 
-            if keys[pygame.K_SPACE]:
+            if keys[pygame.K_DOWN] or keys[pygame.K_UP] or keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]:
                 player.shoot(current_room)
 
             player.update_projectiles(current_room)
