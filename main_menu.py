@@ -9,7 +9,7 @@ def show_main_menu(screen):
 
     # Загрузка шрифтов
     font_title = pygame.font.Font('Fonts/alagard-12px-unicode.otf', 48)
-    font_option = pygame.font.SysFont('Arial', 32, bold=True)
+    font_option = pygame.font.Font('Fonts/alagard-12px-unicode.otf', 32)
 
     # Создание текста
     title_text = font_title.render("KBInterrupt", True, WHITE)
