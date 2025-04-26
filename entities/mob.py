@@ -21,4 +21,4 @@ class Mob:
 
             mob_rect = pygame.Rect(mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2, MOB_SIZE, MOB_SIZE)
             if mob_rect.colliderect(player.rect):
-                player.take_damage(MOB_DAMAGE)  # 0.1 урона за кадр при контакте
+                player.take_damage(MOB_DAMAGE)

@@ -1,14 +1,13 @@
+import pygame
 import random
 import sys
-
-import pygame
-
+from settings import *
 from Puzzles.ClickChoicePuzzle import ClickChoicePuzzle
 from entities.mob import Mob
 from entities.player import Player
 from game import show_game_over, draw_game_info
 from room import create_dungeon
-from settings import load_images, WIDTH, HEIGHT, BLACK
+from main_menu import show_main_menu  # Импортируем функцию для отображения главного меню
 
 available_puzzles = [
     lambda screen: ClickChoicePuzzle(
@@ -37,7 +36,6 @@ available_puzzles = [
     ),
 ]
 
-
 def adjust_player_position(player, door):
     """Корректирует позицию игрока при переходе через дверь"""
     if door['direction'] == 'north':
@@ -49,9 +47,6 @@ def adjust_player_position(player, door):
     elif door['direction'] == 'east':
         player.rect.left = door['target'].rect.left + 10
 
-
-
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -61,6 +56,9 @@ def main():
     images = load_images()
     if images is None:
         print("Не удалось загрузить изображения!")
+        return
+
+    if not show_main_menu(screen):  # Показываем главное меню
         return
 
     rooms = create_dungeon(images)
@@ -145,7 +143,6 @@ def main():
 
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()
