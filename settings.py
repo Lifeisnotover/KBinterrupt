@@ -35,6 +35,7 @@ def load_images():
     try:
         right_images = [pygame.image.load('Images/right_right.png'), pygame.image.load('Images/right_left.png')]
         left_images = [pygame.image.load('Images/left_right.png'), pygame.image.load('Images/left_left.png')]
+        idle_images = [pygame.image.load('Images/idle_right_1.png'), pygame.image.load('Images/idle_right_2.png')]
         up_image = pygame.image.load('Images/up.png')
         down_images = [pygame.image.load('Images/down.png')]
 
@@ -44,6 +45,8 @@ def load_images():
         projectile_image_1 = pygame.image.load('Images/one.png')
         projectile_image_2 = pygame.image.load('Images/zero.png')
 
+
+        idle_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in idle_images]
         right_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in right_images]
         left_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in left_images]
         up_image = [pygame.transform.scale(up_image, (PLAYER_SIZE, PLAYER_SIZE))]
@@ -62,6 +65,7 @@ def load_images():
             'room_bg': room_background_image,
             'wall': wall_image,
             'mob': mob_image,
+            'idle_right': idle_images,
             'projectiles': {
                 '0': projectile_image_1,
                 '1': projectile_image_2

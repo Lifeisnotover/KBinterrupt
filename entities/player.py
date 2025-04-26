@@ -26,6 +26,10 @@ class Player:
         self.visible = True
         self.hit_flash_timer = 0
 
+        self.idle_animation_frame = 0
+        self.idle_animation_speed = 0.1  # Медленнее, чем при ходьбе
+        self.is_moving = False
+
     def move(self, dx, dy, rooms):
         if dx > 0:
             self.last_direction = 'right'
@@ -36,13 +40,16 @@ class Player:
         elif dy > 0:
             self.last_direction = 'down'
 
-        if dx != 0 or dy != 0:
+        self.is_moving = dx != 0 or dy != 0
+
+        if self.is_moving:
             self.animation_frame += self.animation_speed
             frames = self.images[self.last_direction]
             self.current_image = frames[int(self.animation_frame) % len(frames)]
         else:
-            self.animation_frame = 0
-            self.current_image = self.images[self.last_direction][0]
+            self.idle_animation_frame += self.idle_animation_speed
+            idle_frames = self.images['idle_right']
+            self.current_image = idle_frames[int(self.idle_animation_frame) % len(idle_frames)]
 
         old_pos = self.rect.copy()
         self.rect.x += dx * self.speed
