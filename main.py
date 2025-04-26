@@ -50,7 +50,7 @@ def adjust_player_position(player, door):
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Рогалик с головоломками")
+    pygame.display.set_caption("KBInterrupt")
     clock = pygame.time.Clock()
 
     images = load_images()
