@@ -1,7 +1,5 @@
 import pygame
-
-from KBinterrupt.settings import *
-
+from settings import *
 
 class ChoiceButton:
     def __init__(self, x, y, text):

@@ -1,5 +1,5 @@
 import pygame
-from KBinterrupt.settings import *
+
 class DraggableBlock:
     def __init__(self, x, y, text):
         self.rect = pygame.Rect(x, y, 100, 50)

@@ -1,6 +1,7 @@
 import pygame
 import random
-from KBinterrupt.settings import *
+from settings import *
+
 
 class Mob:
     def update_mobs(self, current_room, player):
@@ -13,11 +14,11 @@ class Mob:
 
             dx = player.rect.centerx - mob['x']
             dy = player.rect.centery - mob['y']
-            length = (dx**2 + dy**2)**0.5
+            length = (dx ** 2 + dy ** 2) ** 0.5
             if length > 0:
-                mob['x'] += dx/length * 1
-                mob['y'] += dy/length * 1
+                mob['x'] += dx / length * MOB_SPEED
+                mob['y'] += dy / length * MOB_SPEED
 
-            if ((mob['x'] - player.rect.centerx)**2 +
-                (mob['y'] - player.rect.centery)**2)**0.5 < PLAYER_SIZE + MOB_SIZE:
-                player.health -= 0.1
+            mob_rect = pygame.Rect(mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2, MOB_SIZE, MOB_SIZE)
+            if mob_rect.colliderect(player.rect):
+                player.take_damage(MOB_DAMAGE)  # 0.1 урона за кадр при контакте

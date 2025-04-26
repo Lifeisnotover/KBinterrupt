@@ -119,6 +119,8 @@ def main():
                         break
                 current_puzzle = None
         else:
+            player.update(current_room)
+
             keys = pygame.key.get_pressed()
             dx, dy = 0, 0
             if keys[pygame.K_w]: dy = -player.speed

@@ -1,97 +1,125 @@
 import pygame
 import random
-from KBinterrupt.settings import *
+from settings import *
+
 
 class Player:
     def __init__(self, x, y, images):
         self.rect = pygame.Rect(x, y, PLAYER_SIZE, PLAYER_SIZE)
         self.speed = PLAYER_SPEED
         self.health = 10
-        self.projectiles = []
-        self.shoot_cooldown = 0
+        self.max_health = 10
+        self.projectiles = []  # Снаряды
+        self.shoot_cooldown = 0  # Таймер перезарядки
+        self.shoot_delay = 15  # Задержка между выстрелами (в кадрах)
         self.images = images
         self.current_image = images['down'][0]
-        self.animation_frame = 0
-        self.animation_delay = 10
-        self.animation_counter = 0
-        self.last_direction = None
-    def draw(self, surface):
-        surface.blit(self.current_image, self.rect.topleft)
-        for proj in self.projectiles:
-            image = self.images['projectiles'][proj['type']]
-            surface.blit(image, (int(proj['x'] - PROJECTILE_SIZE // 2), int(proj['y'] - PROJECTILE_SIZE // 2)))
+
+        # Система иммунитета
+        self.is_invincible = False
+        self.invincibility_timer = 0
+        self.invincibility_duration = 30  # 1 секунда при 60 FPS
+        self.blink_timer = 0
+        self.blink_speed = 5  # Частота мигания
+        self.visible = True
+        self.hit_flash_timer = 0
 
     def move(self, dx, dy, rooms):
-        self.rect.x += dx
-        self.rect.y += dy
+        old_pos = self.rect.copy()
+        self.rect.x += dx * self.speed
+        self.rect.y += dy * self.speed
+
         for room in rooms:
             if not room.rect.contains(self.rect):
-                self.rect.x -= dx
-                self.rect.y -= dy
+                self.rect = old_pos
                 break
 
-        if dx > 0:
-            self.update_animation('right')
-        elif dx < 0:
-            self.update_animation('left')
-        elif dy > 0:
-            self.update_animation('down')
-        elif dy < 0:
-            self.update_animation('up')
+    def shoot(self, current_room=None):
+        if self.shoot_cooldown <= 0:
+            keys = pygame.key.get_pressed()
+            dx, dy = 0, 1  # По умолчанию стреляем вниз
 
-    def update_animation(self, direction):
-        if direction != self.last_direction:
-            self.animation_frame = 0
-            self.last_direction = direction
+            if keys[pygame.K_LEFT]:
+                dx, dy = -1, 0
+            elif keys[pygame.K_RIGHT]:
+                dx, dy = 1, 0
+            elif keys[pygame.K_UP]:
+                dx, dy = 0, -1
+            elif keys[pygame.K_DOWN]:
+                dx, dy = 0, 1
 
-        self.animation_counter += 1
-        if self.animation_counter >= self.animation_delay:
-            self.animation_counter = 0
-
-            if direction in ['up', 'left', 'right', 'down'] and isinstance(self.images[direction], list):
-                self.animation_frame = (self.animation_frame + 1) % len(self.images[direction])
-                self.current_image = self.images[direction][self.animation_frame]
-
-    def shoot(self, current_room):
-        if self.shoot_cooldown <= 0 and current_room.mobs:
-            closest_mob = min(
-                current_room.mobs,
-                key=lambda mob: ((self.rect.centerx - mob['x'])**2 + (self.rect.centery - mob['y'])**2)**0.5
-            )
-
-            dx = closest_mob['x'] - self.rect.centerx
-            dy = closest_mob['y'] - self.rect.centery
-            length = (dx**2 + dy**2)**0.5
-            if length > 0:
-                dx, dy = dx/length, dy/length
-
-            projectile_type = random.choice(['0', '1'])
             self.projectiles.append({
                 'x': self.rect.centerx,
                 'y': self.rect.centery,
-                'dx': dx * 7,
-                'dy': dy * 7,
-                'type': projectile_type
+                'dx': dx * PROJECTILE_SPEED,
+                'dy': dy * PROJECTILE_SPEED,
+                'type': random.choice(['0', '1'])
             })
-            self.shoot_cooldown = 15
+            self.shoot_cooldown = self.shoot_delay
+        # Убедимся, что таймер перезарядки уменьшается каждый кадр
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
+
+    def take_damage(self, amount):
+        if not self.is_invincible:
+            self.health = max(0, self.health - amount)  # Гарантируем, что здоровье не уйдет ниже 0
+            self.activate_invincibility()
+
+    def activate_invincibility(self):
+        """Активирует период неуязвимости"""
+        self.is_invincible = True
+        self.invincibility_timer = self.invincibility_duration
+        self.hit_flash_timer = self.invincibility_duration
+
+    def update(self, current_room):
+        # Обновление иммунитета
+        if self.is_invincible:
+            self.invincibility_timer -= 1
+            self.hit_flash_timer -= 1
+            if self.invincibility_timer <= 0:
+                self.is_invincible = False
+
+        # Обновление перезарядки
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
+
+        # Обновление снарядов
+        self.update_projectiles(current_room)
 
     def update_projectiles(self, current_room):
-        for proj in self.projectiles[:]:
+        for proj in self.projectiles[:]:  # Копируем список для безопасного удаления
+            # Движение снаряда
             proj['x'] += proj['dx']
             proj['y'] += proj['dy']
 
-            for mob in current_room.mobs[:]:
-                if ((proj['x'] - mob['x'])**2 + (proj['y'] - mob['y'])**2)**0.5 < MOB_SIZE + PROJECTILE_SIZE:
-                    mob['health'] -= 1
+            # Проверка столкновения с мобы
+            for mob in current_room.mobs[:]:  # Копируем список для безопасного удаления
+                mob_rect = pygame.Rect(mob['x'] - MOB_SIZE // 2, mob['y'] - MOB_SIZE // 2, MOB_SIZE, MOB_SIZE)
+                proj_rect = pygame.Rect(proj['x'] - PROJECTILE_SIZE, proj['y'] - PROJECTILE_SIZE,
+                                        PROJECTILE_SIZE * 2, PROJECTILE_SIZE * 2)
+
+                if mob_rect.colliderect(proj_rect):
+                    mob['health'] -= 1  # Уменьшаем здоровье моба
                     if mob['health'] <= 0:
-                        current_room.mobs.remove(mob)
-                    if proj in self.projectiles:
-                        self.projectiles.remove(proj)
+                        current_room.mobs.remove(mob)  # Удаляем убитого моба
+                    self.projectiles.remove(proj)  # Удаляем снаряд
                     break
 
+            # Удаление снарядов за пределами комнаты
             if not current_room.rect.collidepoint(proj['x'], proj['y']):
-                if proj in self.projectiles:
-                    self.projectiles.remove(proj)
+                self.projectiles.remove(proj)
 
-        if self.shoot_cooldown > 0:
-            self.shoot_cooldown -= 1
+    def draw(self, surface):
+        # Отрисовка игрока (с миганием при иммунитете)
+        if not self.is_invincible or self.hit_flash_timer % 10 < 5:
+            surface.blit(self.current_image, self.rect.topleft)
+
+        # Отрисовка снарядов
+        for proj in self.projectiles:
+            color = WHITE if proj['type'] == '1' else PURPLE
+            pygame.draw.circle(
+                surface,
+                color,
+                (int(proj['x']), int(proj['y'])),
+                PROJECTILE_SIZE
+            )
