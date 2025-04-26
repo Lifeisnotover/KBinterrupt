@@ -1,10 +1,6 @@
-import pygame
-import random
-from settings import *
 
-import pygame
 import random
-from settings import *
+from KBinterrupt.settings import *
 
 class Player:
     def __init__(self, x, y, images):

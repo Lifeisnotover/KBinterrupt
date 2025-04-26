@@ -10,6 +10,7 @@ class Room:
         self.doors = []
         self.mobs = []
         self.images = images
+        self.completed = False
 
     def draw(self, surface, player_rect=None):
         wall_rect = pygame.Rect(self.rect.x - 20, self.rect.y - 20, self.rect.w + 40, self.rect.h + 40)

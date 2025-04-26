@@ -1,12 +1,18 @@
 import pygame
-
+# Game settings
 WIDTH, HEIGHT = 800, 600
 PLAYER_SPEED = 5
-PLAYER_SIZE = 35
+PLAYER_SIZE = 40
 MOB_SIZE = 30
-PROJECTILE_SIZE = 30
+PROJECTILE_SIZE = 8
 DOOR_SIZE = 20
 
+# Puzzle settings
+PUZZLE_WIDTH = 800
+PUZZLE_HEIGHT = 600
+FONT_SIZE = 32
+
+# Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
@@ -14,6 +20,8 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 PURPLE = (255, 0, 255)
+LIGHT_BLUE = (173, 216, 230)
+LIGHT_GREEN = (144, 238, 144)
 
 def load_images():
     try:
