@@ -1,8 +1,8 @@
 import random
 import sys
 import pygame
-from KBinterrupt.entities.mob import Mob
-from KBinterrupt.entities.player import Player
+from entities.mob import Mob
+from entities.player import Player
 from Puzzles.ClickChoicePuzzle import ClickChoicePuzzle
 from game import show_game_over, draw_game_info
 from room import create_dungeon
@@ -24,7 +24,7 @@ def main():
     current_room = rooms[0]
     mob_system = Mob()
     current_puzzle = None
-    completed_rooms = []  # Список пройденных комнат
+    completed_rooms = []
 
     running = True
     while running:
@@ -37,11 +37,9 @@ def main():
                 elif event.key == pygame.K_e and current_puzzle is None:
                     for door in current_room.doors:
                         if player.rect.colliderect(door['rect']):
-                            # Проверяем, нужно ли запускать головоломку
                             if len(current_room.mobs) == 0 and current_room not in completed_rooms:
                                 current_puzzle = random.choice([ClickChoicePuzzle(screen)])
                             else:
-                                # Просто переходим, если комната уже пройдена или мобы не убиты
                                 current_room = door['target']
                                 if door['direction'] == 'north':
                                     player.rect.bottom = current_room.rect.bottom - 10
@@ -61,7 +59,7 @@ def main():
                 rooms = create_dungeon(images)
                 player = Player(WIDTH // 2, HEIGHT // 2, images)
                 current_room = rooms[0]
-                completed_rooms = []  # Сбрасываем список пройденных комнат
+                completed_rooms = []
             continue
 
         if current_puzzle:
@@ -69,10 +67,9 @@ def main():
             current_puzzle.draw()
 
             if current_puzzle.is_completed():
-                completed_rooms.append(current_room)  # Добавляем комнату в пройденные
+                completed_rooms.append(current_room)
                 current_puzzle = None
 
-                # Автоматический переход после решения головоломки
                 for door in current_room.doors:
                     if player.rect.colliderect(door['rect']):
                         current_room = door['target']
@@ -86,7 +83,6 @@ def main():
                             player.rect.left = current_room.rect.left + 10
                         break
         else:
-            # Обычная игровая логика
             keys = pygame.key.get_pressed()
             dx, dy = 0, 0
             if keys[pygame.K_w]: dy = -player.speed

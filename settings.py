@@ -1,5 +1,4 @@
 import pygame
-# Game settings
 WIDTH, HEIGHT = 800, 600
 PLAYER_SPEED = 5
 PLAYER_SIZE = 40
@@ -7,12 +6,10 @@ MOB_SIZE = 30
 PROJECTILE_SIZE = 8
 DOOR_SIZE = 20
 
-# Puzzle settings
 PUZZLE_WIDTH = 800
 PUZZLE_HEIGHT = 600
 FONT_SIZE = 32
 
-# Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)

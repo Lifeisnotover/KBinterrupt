@@ -1,4 +1,4 @@
-from KBinterrupt.settings import *
+from settings import *
 
 
 class ClickChoicePuzzle:
@@ -9,9 +9,8 @@ class ClickChoicePuzzle:
         self.completed = False
         self.task_text = "Что выведет этот код?\n\nint main() {\n  int x = 5;\n  int y = x++ + ++x;\n  cout << y;\n  return 0;\n}"
         self.answers = ["10", "11", "12", "13"]
-        self.correct_answer = "12"  # Правильный ответ
+        self.correct_answer = "12"
 
-        # Создаем кнопки с вариантами ответов
         button_width = 200
         button_height = 50
         start_x = (WIDTH - (len(self.answers) * button_width)) // 2
@@ -41,13 +40,11 @@ class ClickChoicePuzzle:
     def draw(self):
         self.screen.fill(WHITE)
 
-        # Рисуем текст задания
         lines = self.task_text.split('\n')
         for i, line in enumerate(lines):
             text_surf = self.font.render(line, True, BLACK)
             self.screen.blit(text_surf, (WIDTH // 2 - text_surf.get_width() // 2, 100 + i * 30))
 
-        # Рисуем кнопки
         for button in self.buttons:
             pygame.draw.rect(self.screen, button['color'], button['rect'])
             text_surf = self.font.render(button['text'], True, BLACK)
