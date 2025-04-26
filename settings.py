@@ -46,7 +46,7 @@ def load_images():
 
         right_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in right_images]
         left_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in left_images]
-        up_image = pygame.transform.scale(up_image, (PLAYER_SIZE, PLAYER_SIZE))
+        up_image = [pygame.transform.scale(up_image, (PLAYER_SIZE, PLAYER_SIZE))]
         down_images = [pygame.transform.scale(img, (PLAYER_SIZE, PLAYER_SIZE)) for img in down_images]
         room_background_image = pygame.transform.scale(room_background_image, (200, 200))
         wall_image = pygame.transform.scale(wall_image, (240, 240))

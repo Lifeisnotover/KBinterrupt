@@ -14,6 +14,9 @@ class Player:
         self.shoot_delay = 45
         self.images = images
         self.current_image = images['down'][0]
+        self.animation_frame = 0
+        self.animation_speed = 0.1
+        self.last_direction = 'down'
 
         self.is_invincible = False
         self.invincibility_timer = 0
@@ -24,15 +27,26 @@ class Player:
         self.hit_flash_timer = 0
 
     def move(self, dx, dy, rooms):
+        if dx > 0:
+            self.last_direction = 'right'
+        elif dx < 0:
+            self.last_direction = 'left'
+        elif dy < 0:
+            self.last_direction = 'up'
+        elif dy > 0:
+            self.last_direction = 'down'
+
+        if dx != 0 or dy != 0:
+            self.animation_frame += self.animation_speed
+            frames = self.images[self.last_direction]
+            self.current_image = frames[int(self.animation_frame) % len(frames)]
+        else:
+            self.animation_frame = 0
+            self.current_image = self.images[self.last_direction][0]
+
         old_pos = self.rect.copy()
         self.rect.x += dx * self.speed
         self.rect.y += dy * self.speed
-        if dx > 0:
-            self.current_image = self.images['right'][0]
-        elif dx < 0:
-            self.current_image = self.images['left'][0]
-        elif dy > 0:
-            self.current_image = self.images['down'][0]
 
         for room in rooms:
             if not room.rect.contains(self.rect):
@@ -70,7 +84,6 @@ class Player:
             self.activate_invincibility()
 
     def activate_invincibility(self):
-        """Активирует период неуязвимости"""
         self.is_invincible = True
         self.invincibility_timer = self.invincibility_duration
         self.hit_flash_timer = self.invincibility_duration
