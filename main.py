@@ -1,12 +1,41 @@
 import random
 import sys
+
 import pygame
+
+from Puzzles.ClickChoicePuzzle import ClickChoicePuzzle
 from entities.mob import Mob
 from entities.player import Player
-from Puzzles.ClickChoicePuzzle import ClickChoicePuzzle
 from game import show_game_over, draw_game_info
 from room import create_dungeon
 from settings import load_images, WIDTH, HEIGHT, BLACK
+
+available_puzzles = [
+    lambda screen: ClickChoicePuzzle(
+        screen,
+        "Что выведет этот код?\n\nint main() {\n  int x = 5;\n  int y = x++ + ++x;\n  cout << y;\n  return 0;\n}",
+        ["10", "11", "12", "13"],
+        "12"
+    ),
+    lambda screen: ClickChoicePuzzle(
+        screen,
+        "Какая сложность у быстрой сортировки\nв среднем случае?",
+        ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
+        "O(n log n)"
+    ),
+    lambda screen: ClickChoicePuzzle(
+        screen,
+        "Какой алгоритм использует Dijkstra\nдля нахождения кратчайшего пути?",
+        ["Жадный", "Разделяй и властвуй", "Динамическое программирование", "Полный перебор"],
+        "Жадный"
+    ),
+    lambda screen: ClickChoicePuzzle(
+        screen,
+        "Что делает оператор '>>>' в Java?",
+        ["Логическое И", "Беззнаковый сдвиг вправо", "Знаковый сдвиг вправо", "Логическое ИЛИ"],
+        "Беззнаковый сдвиг вправо"
+    ),
+]
 
 
 def adjust_player_position(player, door):
@@ -21,36 +50,6 @@ def adjust_player_position(player, door):
         player.rect.left = door['target'].rect.left + 10
 
 
-def create_puzzle_for_room(screen, room_name):
-    """Создает соответствующую загадку для комнаты"""
-    if room_name == "Кладовая":
-        return ClickChoicePuzzle(
-            screen,
-            "Что выведет этот код?\n\nint main() {\n  int x = 5;\n  int y = x++ + ++x;\n  cout << y;\n  return 0;\n}",
-            ["10", "11", "12", "13"],
-            "12"
-        )
-    elif room_name == "Арсенал":
-        return ClickChoicePuzzle(
-            screen,
-            "Какая сложность у быстрой сортировки\nв среднем случае?",
-            ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
-            "O(n log n)"
-        )
-    elif room_name == "Библиотека":
-        return ClickChoicePuzzle(
-            screen,
-            "Какой алгоритм использует Dijkstra\nдля нахождения кратчайшего пути?",
-            ["Жадный", "Разделяй и властвуй", "Динамическое программирование", "Полный перебор"],
-            "Жадный"
-        )
-    elif room_name == "Тайная комната":
-        return ClickChoicePuzzle(
-            screen,
-            "Что делает оператор '>>>' в Java?",
-            ["Логическое И", "Беззнаковый сдвиг вправо", "Знаковый сдвиг вправо", "Логическое ИЛИ"],
-            "Беззнаковый сдвиг вправо"
-        )
 
 
 def main():
@@ -81,18 +80,19 @@ def main():
                 elif event.key == pygame.K_e and current_puzzle is None:
                     for door in current_room.doors:
                         if player.rect.colliderect(door['rect']):
-                            # Если это главный зал или комната с решенной загадкой - просто переходим
-                            if door['target'].name == "Главный зал" or door['target'].puzzle_solved:
+                            if door['target'].name == "Главный зал" or getattr(door['target'], "puzzle_solved", False):
                                 current_room = door['target']
                                 adjust_player_position(player, door)
                                 break
 
-                            # Если есть мобы - не пускаем
                             if len(current_room.mobs) > 0:
                                 break
 
-                            # Если это первый вход - показываем загадку
-                            current_puzzle = create_puzzle_for_room(screen, door['target'].name)
+                            if available_puzzles:
+                                selected_creator = random.choice(available_puzzles)
+                                current_puzzle = selected_creator(screen)
+                                available_puzzles.remove(selected_creator)
+
                             break
 
             if current_puzzle:

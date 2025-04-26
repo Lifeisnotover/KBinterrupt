@@ -1,11 +1,11 @@
 import pygame
-
+from KBinterrupt.settings import *
 class DraggableBlock:
     def __init__(self, x, y, text):
         self.rect = pygame.Rect(x, y, 100, 50)
         self.text = text
         self.dragging = False
-        self.font = pygame.font.SysFont(None, puzzle_settings.FONT_SIZE)
+        self.font = pygame.font.SysFont(None, FONT_SIZE)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -20,6 +20,6 @@ class DraggableBlock:
         pass
 
     def myDraw(self, screen):
-        pygame.draw.rect(screen, puzzle_settings.LIGHT_BLUE, self.rect)
-        text_surf = self.font.render(self.text, True, puzzle_settings.BLACK)
+        pygame.draw.rect(screen, LIGHT_BLUE, self.rect)
+        text_surf = self.font.render(self.text, True, BLACK)
         screen.blit(text_surf, (self.rect.x + 5, self.rect.y + 10))

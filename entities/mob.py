@@ -1,6 +1,6 @@
 import pygame
 import random
-from settings import *
+from KBinterrupt.settings import *
 
 class Mob:
     def update_mobs(self, current_room, player):
